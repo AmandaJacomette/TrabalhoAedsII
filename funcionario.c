@@ -1,10 +1,15 @@
 #include "funcionario.h"
+#include "particoes.h"
+#include "utils.h"
+
 #include <math.h>
 #include <stdarg.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
 #include <limits.h>
+
+#define NUM_REGISTROS 10;
 
 // Imprime funcionario
 void imprime_funcionario(TFunc *func) {
