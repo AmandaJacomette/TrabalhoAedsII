@@ -7,6 +7,7 @@
 #include <stdio.h>
 
 #include "utils.h"
+#include "particoes.h"
 
 typedef struct Funcionario {
     int cod;
@@ -15,6 +16,15 @@ typedef struct Funcionario {
     char data_nascimento[11];
     double salario;
 } TFunc;
+
+typedef struct vetor_func {
+  TFunc *func;
+  FILE *f;
+  TParticao *particao;
+  int aux_p;
+  int read;
+
+} TVetFunc;
 
 void imprime_funcionario(TFunc *func);
 
@@ -41,6 +51,17 @@ void insertion_sort_disco_funcionario(FILE *arq, int tam);
 void initializeBaseDesorder_funcionario(FILE* file, int numberRecords);
 
 void classificacaoSubs_func(FILE *arq);
+
+void merge_funcionarios(TVetFunc **arr, int l, int m, int r);
+
+void mergeSort_funcionarios(TVetFunc **arr, int l, int r);
+
+void intercalacao_funcionarios(char *nome_arquivo_saida, TNomes *nome_particoes);
+
+void processa_particoes_funcionarios(TVetFunc **v, TNomes *nome_particoes, int num_p, char *out);
+
+void intercala_particoes_funcionarios(TVetFunc *particao, TVetFunc *particao2, TNomes *nome_particoes, int index);
+
 
 #endif //FUNCIONARIOS_FUNCIONARIO_H
 
