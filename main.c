@@ -16,8 +16,9 @@ void msg_MENU(char *tipo) {
   printf("\n----------- PROGRAMA DE GERENCIAMENTO DE %s -----------\n", tipo);
   printf("OBS.: Todas as informacoes serao armazenadas em "
          "arquivos.\n\nOPERACOES DISPONIVEIS:\n");
-  printf("1 - Criar base\n2 - Ordenar\n3 - Imprimir\n4 - Pesquisar "
-         "(Sequencial)\n5 - Pesquisar (Binaria)\n6 - Sair\n");
+  printf(
+      "1 - Criar base\n2 - Ordenar\n3 - Imprimir\n4 - Pesquisar "
+      "(Sequencial)\n5 - Pesquisar (Binaria)\n6 - Criar partições\n7 - Sair\n");
   printf("RESPOSTA: ");
 }
 
@@ -30,7 +31,7 @@ void menu_funcionario() {
     int escolha = -1;
     int cod;
 
-    while (escolha != 6) {
+    while (escolha != 7) {
       msg_MENU("FUNCIONARIO");
       scanf("%d", &escolha);
       if (escolha == 1) {
@@ -78,6 +79,9 @@ void menu_funcionario() {
           imprime_funcionario(func);
         }
       } else if (escolha == 6) {
+        printf("Criando partições...");
+        classificacaoSubs_func(out);
+      } else if (escolha == 7) {
         system("cls");
         break;
       } else {
@@ -98,7 +102,7 @@ void menu_cliente() {
     int escolha = -1;
     int cod;
 
-    while (escolha != 6) {
+    while (escolha != 7) {
       msg_MENU("CLIENTE");
       scanf("%d", &escolha);
       if (escolha == 1) {
@@ -145,6 +149,9 @@ void menu_cliente() {
           imprime_cliente(c2);
         }
       } else if (escolha == 6) {
+        printf("Criando partições...");
+        classificacaoSubs_cli(out_cli);
+      } else if (escolha == 7) {
         system("cls");
         break;
       } else {

@@ -4,6 +4,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <stdio.h>
+#include <limits.h>
+
 
 void imprime_cliente(TCliente *cliente) {
   printf("\n**********************************************");
@@ -180,3 +183,109 @@ void insertion_sort_disco_cliente(FILE *arq, int tam) {
   }
   fflush(arq);
 }
+
+void classificacaoSubs_cli(FILE *arq) {
+    rewind(arq); //posiciona cursor no inicio do arquivo
+
+    int reg = 0;
+    int nFunc = tamanho_arquivo_cliente(arq);
+    int qtdParticoes = 0;
+    char nome[40];
+    char numero[3];
+    char extensao[5];
+    int tamRes = 5;
+    int tamVet = 5;
+    TCliente *v[tamVet];
+    TCliente *menor;
+    int congela[nFunc];
+    int aux = 0, tamPart = 0, posiMenor = 0, proxArq = 5, resIt = 0, auxCong = 0, auxFimArq = 0;
+    int i = 0;
+    FILE *p;
+
+    //Preenche o vetor inicial
+    while (i < tamVet){
+      fseek(arq, (i) * tamanho_cliente(), SEEK_SET);
+      v[i] = le_cliente(arq);
+      i++;
+    }
+
+    i = 0;
+
+    while (i < tamVet){
+      congela[i] =0;
+      i++;
+    }
+    i = 0;
+
+    while(proxArq < nFunc || aux < nFunc){
+        while (i < tamVet){
+            if(congela[i] != 0){
+                auxCong++;
+            }
+            i++;
+        }
+        i = 0;
+        if(proxArq == 5 || auxCong != 0){
+            //Cria partição
+            sprintf(nome, "particoesCli/particao%d", qtdParticoes);
+            char* fim = ".dat";
+            strcat(nome, fim);
+            tamPart = 0;
+
+            if ((p = fopen(nome, "wb+")) == NULL) {
+                printf("Erro criar arquivo de saida\n");
+            }
+        }
+
+        auxCong = 0;
+        while (i < tamVet){
+            congela[i] = -1;
+            i++;
+        }
+
+        while((auxCong < tamVet && proxArq < nFunc) || (auxCong < tamVet && aux < nFunc)){
+            aux++;
+            menor->cod = INT_MAX;
+            posiMenor = nFunc-1;
+            for (int j = 0; j < tamVet; j++) {
+                if (v[j]->cod < menor->cod && congela[j] == -1 && v[j]->cod != -1) {
+                    menor = v[j];
+                    posiMenor = j;
+                }
+            }
+
+            //salva o menor elemento na partição
+            fseek(p, (tamPart) * tamanho_cliente(), SEEK_SET);
+            salva_cliente(menor, p);
+            tamPart++;
+
+            fseek(arq, (proxArq) * tamanho_cliente(), SEEK_SET);//pega o proximo elemento
+
+
+            if(proxArq < nFunc){
+                v[posiMenor] = le_cliente(arq);
+
+                if (v[posiMenor]->cod < menor->cod){
+                    //verifica se é menor e poe no reservatio
+                    congela[posiMenor] = posiMenor;
+                    auxCong++;
+                }
+            } else {
+                congela[posiMenor] = posiMenor;
+                auxCong++;
+                v[posiMenor]->cod = -1;
+            }
+            proxArq++;
+
+            if(auxCong == tamVet){
+                fclose(p);
+                qtdParticoes++;
+            }
+
+        }
+        fclose(p);
+    }
+    fclose(p);
+}
+
+

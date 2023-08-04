@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <limits.h>
 
 // Imprime funcionario
 void imprime_funcionario(TFunc *func) {
@@ -104,7 +105,7 @@ void initializeBaseDesorder_funcionario(FILE *file, int numberRecords) {
     func.cod = f[i];
     sprintf(func.data_nascimento, "01/01/2000");
     sprintf(func.cpf, "111.111.111-11");
-    sprintf(func.nome, "Funcionario %d", f[i+1]);
+    sprintf(func.nome, "Funcionario %d", f[i]);
     func.salario = 1000.2 * i;
     fseek(file, (i)* tamanho_registro_funcionario(), SEEK_SET);
     salva_funcionario(&func, file);
@@ -185,4 +186,111 @@ void insertion_sort_disco_funcionario(FILE *arq, int tam) {
     salva_funcionario(fj, arq);
   }
   fflush(arq);
+}
+
+void classificacaoSubs_func(FILE *arq) {
+    rewind(arq); //posiciona cursor no inicio do arquivo
+
+    int reg = 0;
+    int nFunc = tamanho_arquivo_funcionario(arq);
+    int qtdParticoes = 0;
+    int t = tamanho_funcionario();
+    char nome[40];
+    char numero[3];
+    char extensao[5];
+    int tamRes = 5;
+    int tamVet = 5;
+    TFunc *v[tamVet];
+    TFunc *reservatorio[tamRes];
+    TFunc *menor;
+    int congela[nFunc];
+    TFunc *f;
+    int aux = 0, tamPart = 0, posiMenor = 0, proxArq = 5, resIt = 0, auxCong = 0, auxFimArq = 0;
+    int i = 0;
+    FILE *p;
+
+    //Preenche o vetor inicial
+    while (i < tamVet){
+      fseek(arq, (i) * tamanho_funcionario(), SEEK_SET);
+      v[i] = le_funcionario(arq);
+      i++;
+    }
+
+    i = 0;
+
+    while (i < tamVet){
+      congela[i] =0;
+      i++;
+    }
+    i = 0;
+
+    while(proxArq < nFunc || aux < nFunc){
+        while (i < tamVet){
+            if(congela[i] != 0){
+                auxCong++;
+            }
+            i++;
+        }
+        i = 0;
+        if(proxArq == 5 || auxCong != 0){
+            //Cria partição
+            sprintf(nome, "particoesFunc/particao%d", qtdParticoes);
+            char* fim = ".dat";
+            strcat(nome, fim);
+            tamPart = 0;
+
+            if ((p = fopen(nome, "wb+")) == NULL) {
+                printf("Erro criar arquivo de saida\n");
+            }
+        }
+
+        auxCong = 0;
+        while (i < tamVet){
+            congela[i] = -1;
+            i++;
+        }
+
+        while((auxCong < tamVet && proxArq < nFunc) || (auxCong < tamVet && aux < nFunc)){
+            aux++;
+            menor->cod = INT_MAX;
+            posiMenor = nFunc-1;
+            for (int j = 0; j < tamVet; j++) {
+                if (v[j]->cod < menor->cod && congela[j] == -1 && v[j]->cod != -1) {
+                    menor = v[j];
+                    posiMenor = j;
+                }
+            }
+
+            //salva o menor elemento na partição
+            fseek(p, (tamPart) * tamanho_funcionario(), SEEK_SET);
+            salva_funcionario(menor, p);
+            tamPart++;
+
+            fseek(arq, (proxArq) * tamanho_funcionario(), SEEK_SET);//pega o proximo elemento
+
+
+            if(proxArq < nFunc){
+                v[posiMenor] = le_funcionario(arq);
+
+                if (v[posiMenor]->cod < menor->cod){
+                    //verifica se é menor e poe no reservatio
+                    congela[posiMenor] = posiMenor;
+                    auxCong++;
+                }
+            } else {
+                congela[posiMenor] = posiMenor;
+                auxCong++;
+                v[posiMenor]->cod = -1;
+            }
+            proxArq++;
+
+            if(auxCong == tamVet){
+                fclose(p);
+                qtdParticoes++;
+            }
+
+        }
+        fclose(p);
+    }
+    fclose(p);
 }

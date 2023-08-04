@@ -41,4 +41,6 @@ TCliente *busca_binaria_cliente(int cod, FILE *arq, int tam);
 
 void insertion_sort_disco_cliente(FILE *arq, int tam);
 
+void classificacaoSubs_cli(FILE *arq);
+
 #endif // CLIENTE_H_INCLUDED

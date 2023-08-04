@@ -40,5 +40,7 @@ void insertion_sort_disco_funcionario(FILE *arq, int tam);
 
 void initializeBaseDesorder_funcionario(FILE* file, int numberRecords);
 
+void classificacaoSubs_func(FILE *arq);
+
 #endif //FUNCIONARIOS_FUNCIONARIO_H
 
