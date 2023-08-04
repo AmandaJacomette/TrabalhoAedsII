@@ -8,6 +8,7 @@
 #include "funcionario.h"
 #include "prateleira.h"
 #include "produto.h"
+#include "particoes.h"
 #include "utils.h"
 #include <stdio.h>
 #include <stdlib.h>
