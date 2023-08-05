@@ -3,13 +3,9 @@
 
 #define CLIENTES_FILE "clientes.dat"
 
-#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-#include <time.h>
 
-#include "particoes.h"
 #include "utils.h"
 
 typedef struct Cliente {
@@ -19,15 +15,6 @@ typedef struct Cliente {
   char data_nascimento[11];
   char contato[20];
 } TCliente;
-
-typedef struct vetor {
-  TCliente *cli;
-  FILE *f;
-  TParticao *particao;
-  int aux_p;
-  int read;
-
-} TVetClientes;
 
 void imprime_cliente(TCliente *cliente);
 
@@ -55,16 +42,5 @@ TCliente *busca_binaria_cliente(int cod, FILE *arq, int tam);
 void insertion_sort_disco_cliente(FILE *arq, int tam);
 
 void classificacaoSubs_cli(FILE *arq);
-
-void merge_clientes(TVetClientes **arr, int l, int m, int r);
-
-void mergeSort_clientes(TVetClientes **arr, int l, int r);
-
-void intercalacao_clientes(char *nome_arquivo_saida, TNomes *nome_particoes);
-
-void processa_particoes_clientes(TVetClientes **v, TNomes *nome_particoes, int num_p, char *out);
-
-void intercala_particoes_clientes(TVetClientes *particao, TVetClientes *particao2, TNomes *nome_particoes, int index);
-
 
 #endif // CLIENTE_H_INCLUDED

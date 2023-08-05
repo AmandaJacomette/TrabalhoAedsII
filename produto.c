@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <limits.h>
 
 void imprime_produto(TProd *prod) {
   printf("**********************************************");
@@ -164,3 +165,118 @@ void insertion_sort_disco_produto(FILE *arq, int tam) {
   }
   fflush(arq);
 }
+
+void classificacaoSubs_prod(FILE *arq) {
+    rewind(arq); //posiciona cursor no inicio do arquivo
+
+    int nFunc = tamanho_arquivo_produto(arq);
+    int qtdParticoes = 0;
+    char nome[40];
+    char numero[3];
+    char extensao[5];
+    int tamRes = 5;
+    int tamVet = 5;
+    TProd *v[tamVet];
+    TProd *menor;
+    int congela[nFunc];
+    int aux = 0, tamPart = 0, posiMenor = 0, proxArq = 5, resIt = 0, auxCong = 0, auxFimArq = 0;
+    int i = 0;
+    FILE *p;
+    TProd forn;
+
+    //Preenche o vetor inicial
+    while (i < tamVet){
+      fseek(arq, (i) * sizeof(TProd), SEEK_SET);
+      v[i] = le_produto(arq);
+      i++;
+    }
+
+    i = 0;
+
+    while (i < tamVet){
+      congela[i] =0;
+      i++;
+    }
+    i = 0;
+
+    while(proxArq < nFunc || aux < nFunc){
+        while (i < tamVet){
+            if(congela[i] != 0){
+                auxCong++;
+            }
+            i++;
+        }
+        i = 0;
+        if(proxArq == 5 || auxCong != 0){
+            //Cria partição
+            sprintf(nome, "particoesProd/particao%d", qtdParticoes);
+            char* fim = ".dat";
+            strcat(nome, fim);
+            tamPart = 0;
+
+            if ((p = fopen(nome, "wb+")) == NULL) {
+                printf("Erro criar arquivo de saida\n");
+            }
+        }
+
+        auxCong = 0;
+        while (i < tamVet){
+            congela[i] = -1;
+            i++;
+        }
+
+        while((auxCong < tamVet && proxArq < nFunc) || (auxCong < tamVet && aux < nFunc)){
+            aux++;
+            menor->cod = INT_MAX;
+            posiMenor = nFunc-1;
+            for (int j = 0; j < tamVet; j++) {
+                if (v[j]->cod < menor->cod && congela[j] == -1 && v[j]->cod != -1) {
+                    menor = v[j];
+                    posiMenor = j;
+                }
+            }
+
+            //salva o menor elemento na partição
+            fseek(p, (tamPart) * sizeof(TProd), SEEK_SET);
+            salva_produto(menor, p);
+            tamPart++;
+
+            fseek(arq, (proxArq) * sizeof(TProd), SEEK_SET);//pega o proximo elemento
+
+
+            if(proxArq < nFunc){
+                v[posiMenor] = le_produto(arq);
+
+                if (v[posiMenor]->cod < menor->cod){
+                    //verifica se é menor e poe no reservatio
+                    congela[posiMenor] = posiMenor;
+                    auxCong++;
+                }
+            } else {
+                congela[posiMenor] = posiMenor;
+                auxCong++;
+                v[posiMenor]->cod = -1;
+            }
+            proxArq++;
+
+            if(auxCong == tamVet){
+                qtdParticoes++;
+            }
+
+        }
+        imprime_cod_prod(p);
+        fclose(p);
+    }
+    fclose(p);
+}
+
+void imprime_cod_prod(FILE *in){
+    printf("\n\nLendo codigo produto da particao...\n");
+    rewind(in);
+    TProd forn;
+
+    while (fread(&forn, sizeof(TProd), 1, in) == 1) {
+        printf("\nProduto de codigo %d", forn.cod);
+    }
+}
+

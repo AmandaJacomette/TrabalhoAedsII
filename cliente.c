@@ -1,15 +1,12 @@
+#include "cliente.h"
 #include <math.h>
 #include <stdarg.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <stdio.h>
+#include <limits.h>
 
-#include "cliente.h"
-#include "particoes.h"
-#include "utils.h"
-
-#define NUM_REGISTROS 10;
 
 void imprime_cliente(TCliente *cliente) {
   printf("\n**********************************************");
@@ -228,7 +225,7 @@ void classificacaoSubs_cli(FILE *arq) {
         }
         i = 0;
         if(proxArq == 5 || auxCong != 0){
-            //Cria partiÃ§Ã£o
+            //Cria partição
             sprintf(nome, "particoesCli/particao%d", qtdParticoes);
             char* fim = ".dat";
             strcat(nome, fim);
@@ -256,7 +253,7 @@ void classificacaoSubs_cli(FILE *arq) {
                 }
             }
 
-            //salva o menor elemento na partiÃ§Ã£o
+            //salva o menor elemento na partição
             fseek(p, (tamPart) * tamanho_cliente(), SEEK_SET);
             salva_cliente(menor, p);
             tamPart++;
@@ -268,7 +265,7 @@ void classificacaoSubs_cli(FILE *arq) {
                 v[posiMenor] = le_cliente(arq);
 
                 if (v[posiMenor]->cod < menor->cod){
-                    //verifica se Ã© menor e poe no reservatio
+                    //verifica se é menor e poe no reservatio
                     congela[posiMenor] = posiMenor;
                     auxCong++;
                 }
@@ -300,6 +297,5 @@ void imprime_cod_cli(FILE *in){
         free(f);
     }
 }
-
 
 

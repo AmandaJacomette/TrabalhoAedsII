@@ -2,7 +2,6 @@
 #define ENCOMENDA_H
 
 #include "utils.h"
-#include "particoes.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -19,15 +18,6 @@ typedef struct Encomenda {
 
 } TEncomenda;
 
-typedef struct vetor_enc {
-  TEncomenda *en;
-  FILE *f;
-  TParticao *particao;
-  int aux_p;
-  int read;
-
-} TVetEncomenda;
-
 void imprime_encomenda(TEncomenda *encomenda);
 TEncomenda *encomenda(int id, char *tipo, char *cnpj, char *cpf, char *data,
                       char* qtde);
@@ -41,9 +31,6 @@ void initializeBaseDesorder_encomenda(FILE *file, int numberRecords);
 TEncomenda busca_sequencial_encomenda(int cod, FILE *arq);
 TEncomenda busca_binaria_encomenda(int cod, FILE *arq, int tam);
 void insertion_sort_disco_encomenda(FILE *arq, int tam);
-void classificacaoSubs_encs(FILE *arq);
-void intercalacao_encomendas(char *nome_arquivo_saida, TNomes *nome_particoes);
-void processa_particoes_encomendas(TVetEncomenda **v, TNomes *nome_particoes, int num_p, char *out);
-void intercala_particoes_encomendas(TVetEncomenda *particao, TVetEncomenda *particao2, TNomes *nome_particoes, int index);
+void classificacaoSubs_encom(FILE *arq);
 
 #endif

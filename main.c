@@ -275,7 +275,7 @@ void menu_fornecedor() {
     int escolha = -1;
     int cod;
 
-    while (escolha != 6) {
+    while (escolha != 7) {
       msg_MENU("FORNECEDORES");
       scanf("%d", &escolha);
       if (escolha == 1) {
@@ -321,7 +321,10 @@ void menu_fornecedor() {
         } else {
           imprime_fornecedor(&forn);
         }
-      } else if (escolha == 6) {
+      }  else if (escolha == 6) {
+        printf("Criando particoes...");
+        classificacaoSubs_forn(out);
+      } else if (escolha == 7) {
         system("cls");
         break;
       } else {
@@ -342,7 +345,7 @@ void menu_encomenda() {
     int escolha = -1;
     int cod;
 
-    while (escolha != 6) {
+    while (escolha != 7) {
       msg_MENU("ENCOMENDAS");
       scanf("%d", &escolha);
       if (escolha == 1) {
@@ -388,6 +391,9 @@ void menu_encomenda() {
         }
 
       } else if (escolha == 6) {
+        printf("Criando partições...");
+        classificacaoSubs_encom(out);
+      } else if (escolha == 7) {
         system("cls");
         break;
       } else {
@@ -408,7 +414,7 @@ void menu_produto() {
     int escolha = -1;
     int cod;
 
-    while (escolha != 6) {
+    while (escolha != 7) {
       msg_MENU("PRODUTO");
       scanf("%d", &escolha);
       if (escolha == 1) {
@@ -455,7 +461,10 @@ void menu_produto() {
         } else {
           imprime_produto(&prod);
         }
-      } else if (escolha == 6) {
+      }  else if (escolha == 6) {
+        printf("Criando particoes...");
+        classificacaoSubs_prod(out_cli);
+      } else if (escolha == 7) {
         system("cls");
         break;
       } else {
@@ -476,7 +485,7 @@ void menu_prateleira() {
     int escolha = -1;
     int cod;
 
-    while (escolha != 6) {
+    while (escolha != 7) {
       msg_MENU("PRATELEIRAS");
       scanf("%d", &escolha);
       if (escolha == 1) {
@@ -525,6 +534,9 @@ void menu_prateleira() {
           imprime_prateleira(&prat);
         }
       } else if (escolha == 6) {
+        printf("Criando particoes...");
+        classificacaoSubs_prat(out_cli);
+      } else if (escolha == 7) {
         system("cls");
         break;
       } else {
@@ -545,7 +557,7 @@ void menu_estoque() {
     int escolha = -1;
     int cod;
 
-    while (escolha != 6) {
+    while (escolha != 8) {
       msg_MENU("ESTOQUE");
       scanf("%d", &escolha);
       if (escolha == 1) {
@@ -593,9 +605,12 @@ void menu_estoque() {
           imprime_estoque(&est);
         }
       } else if (escolha == 6) {
+        printf("Criando particoes...");
+        classificacaoSubs_estoq(out_cli);
+      } else if (escolha == 7) {
         system("cls");
         break;
-      } else {
+      }  else {
         printf("\nESCOLHA UMA OPCAO VALIDA!\n");
         break;
       }

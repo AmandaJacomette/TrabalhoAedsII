@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <limits.h>
 
 void imprime_fornecedor(TForn *forn) {
   printf("\n**********************************************");
@@ -43,17 +44,6 @@ TForn *le_fornecedor(FILE *in) {
   fread(forn->cnpj, sizeof(char), sizeof(forn->cnpj), in);
   return forn;
 }
-/*
-void le_fornecedores(FILE *in) {
-    printf("\n\nLendo fornecedores do arquivo...\n\n");
-    fseek(in, 0, SEEK_SET);
-    TForn *f;
-    while ((f = le_fornecedor(in)) != NULL) {
-        imprime_fornecedor(f);
-        free(f);
-    }
-}
-*/
 
 void le_fornecedores(FILE *in) {
   printf("\n\nLendo fornecedores do arquivo...\n\n");
@@ -175,4 +165,118 @@ void insertion_sort_disco_fornecedor(FILE *arq, int tam) {
     salva_fornecedor(fj, arq);
   }
   fflush(arq);
+}
+
+void classificacaoSubs_forn(FILE *arq) {
+    rewind(arq); //posiciona cursor no inicio do arquivo
+
+    int nFunc = tamanho_arquivo_fornecedor(arq);
+    int qtdParticoes = 0;
+    char nome[40];
+    char numero[3];
+    char extensao[5];
+    int tamRes = 5;
+    int tamVet = 5;
+    TForn *v[tamVet];
+    TForn *menor;
+    int congela[nFunc];
+    int aux = 0, tamPart = 0, posiMenor = 0, proxArq = 5, resIt = 0, auxCong = 0, auxFimArq = 0;
+    int i = 0;
+    FILE *p;
+    TForn forn;
+
+    //Preenche o vetor inicial
+    while (i < tamVet){
+      fseek(arq, (i) * sizeof(TForn), SEEK_SET);
+      v[i] = le_fornecedor(arq);
+      i++;
+    }
+
+    i = 0;
+
+    while (i < tamVet){
+      congela[i] =0;
+      i++;
+    }
+    i = 0;
+
+    while(proxArq < nFunc || aux < nFunc){
+        while (i < tamVet){
+            if(congela[i] != 0){
+                auxCong++;
+            }
+            i++;
+        }
+        i = 0;
+        if(proxArq == 5 || auxCong != 0){
+            //Cria partição
+            sprintf(nome, "particoesForn/particao%d", qtdParticoes);
+            char* fim = ".dat";
+            strcat(nome, fim);
+            tamPart = 0;
+
+            if ((p = fopen(nome, "wb+")) == NULL) {
+                printf("Erro criar arquivo de saida\n");
+            }
+        }
+
+        auxCong = 0;
+        while (i < tamVet){
+            congela[i] = -1;
+            i++;
+        }
+
+        while((auxCong < tamVet && proxArq < nFunc) || (auxCong < tamVet && aux < nFunc)){
+            aux++;
+            menor->cod = INT_MAX;
+            posiMenor = nFunc-1;
+            for (int j = 0; j < tamVet; j++) {
+                if (v[j]->cod < menor->cod && congela[j] == -1 && v[j]->cod != -1) {
+                    menor = v[j];
+                    posiMenor = j;
+                }
+            }
+
+            //salva o menor elemento na partição
+            fseek(p, (tamPart) * sizeof(TForn), SEEK_SET);
+            salva_fornecedor(menor, p);
+            tamPart++;
+
+            fseek(arq, (proxArq) * sizeof(TForn), SEEK_SET);//pega o proximo elemento
+
+
+            if(proxArq < nFunc){
+                v[posiMenor] = le_fornecedor(arq);
+
+                if (v[posiMenor]->cod < menor->cod){
+                    //verifica se é menor e poe no reservatio
+                    congela[posiMenor] = posiMenor;
+                    auxCong++;
+                }
+            } else {
+                congela[posiMenor] = posiMenor;
+                auxCong++;
+                v[posiMenor]->cod = -1;
+            }
+            proxArq++;
+
+            if(auxCong == tamVet){
+                qtdParticoes++;
+            }
+
+        }
+        imprime_cod_forn(p);
+        fclose(p);
+    }
+    fclose(p);
+}
+
+void imprime_cod_forn(FILE *in){
+    printf("\n\nLendo codigo fornecedor da particao...\n");
+    rewind(in);
+    TForn forn;
+
+    while (fread(&forn, sizeof(TForn), 1, in) == 1) {
+        printf("\nFornecedor de codigo %d", forn.cod);
+    }
 }
