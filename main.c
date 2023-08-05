@@ -237,7 +237,7 @@ void menu_cliente() {
        scanf("%d", &num_particoes);
        classificacao_interna(out_cli, num_particoes);
       */
-        classificacaoSubstituicao_clientes(out_cli);
+        classificacaoSubs_cli(out_cli);
         conjunto_particoes = le_nomes_particoes_diretorio("particoesCli");
 
       } else if (escolha == 7) {

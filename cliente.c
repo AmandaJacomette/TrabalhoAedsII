@@ -190,7 +190,6 @@ void insertion_sort_disco_cliente(FILE *arq, int tam) {
 void classificacaoSubs_cli(FILE *arq) {
     rewind(arq); //posiciona cursor no inicio do arquivo
 
-    int reg = 0;
     int nFunc = tamanho_arquivo_cliente(arq);
     int qtdParticoes = 0;
     char nome[40];
@@ -281,14 +280,26 @@ void classificacaoSubs_cli(FILE *arq) {
             proxArq++;
 
             if(auxCong == tamVet){
-                fclose(p);
                 qtdParticoes++;
             }
 
         }
+        imprime_cod_cli(p);
         fclose(p);
     }
     fclose(p);
 }
+
+void imprime_cod_cli(FILE *in){
+    printf("\n\nLendo codigo cliente da particao...\n");
+    rewind(in);
+    TCliente *f = (TCliente *)malloc(sizeof(TCliente));
+    while ((f = le_cliente(in)) != NULL) {
+        printf("\nCliente de codigo ");
+        printf("%d", f->cod);
+        free(f);
+    }
+}
+
 
 
