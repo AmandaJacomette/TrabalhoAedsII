@@ -195,18 +195,14 @@ void insertion_sort_disco_funcionario(FILE *arq, int tam) {
 
 void classificacaoSubs_func(FILE *arq) {
     rewind(arq); //posiciona cursor no inicio do arquivo
-
-    int reg = 0;
+    
     int nFunc = tamanho_arquivo_funcionario(arq);
     int qtdParticoes = 0;
-    int t = tamanho_funcionario();
     char nome[40];
     char numero[3];
     char extensao[5];
-    int tamRes = 5;
     int tamVet = 5;
     TFunc *v[tamVet];
-    TFunc *reservatorio[tamRes];
     TFunc *menor;
     int congela[nFunc];
     TFunc *f;
@@ -290,14 +286,25 @@ void classificacaoSubs_func(FILE *arq) {
             proxArq++;
 
             if(auxCong == tamVet){
-                fclose(p);
                 qtdParticoes++;
             }
 
         }
+        imprime_cod_func(p);
         fclose(p);
     }
     fclose(p);
+}
+
+void imprime_cod_func(FILE *in){
+    printf("\n\nLendo codigo funcionario da particao...\n");
+    rewind(in);
+    TFunc *f = (TFunc *)malloc(sizeof(TFunc));
+    while ((f = le_funcionario(in)) != NULL) {
+        printf("\nFuncionario de codigo ");
+        printf("%d", f->cod);
+        free(f);
+    }
 }
 
 // Função para mesclar duas metades do array em ordem crescente
