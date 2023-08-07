@@ -102,11 +102,12 @@ TNomes *le_nomes_particoes_diretorio(char *nomePasta) {
     DIR *dr;
     struct dirent *en;
 
-    char *nome_dir = malloc(50 * sizeof(char));
-    char ext = "./";
-    strcat(nome_dir, ext);
+    // char *nome_dir = malloc(50 * sizeof(char));
+    char nome_dir[50];
+    strcpy(nome_dir, "./");
     strcat(nome_dir, nomePasta);
 
+    // printf("%s", nome_dir);
     dr = opendir(nome_dir);
 
   if (dr) {
@@ -125,17 +126,6 @@ TNomes *le_nomes_particoes_diretorio(char *nomePasta) {
 
   printf("Leitura do diretorio finalizada.\n");
   return nomes_particoes;
-}
-
-void print_particao(TParticao p) {
-  printf("NOME: %s\n", p.nome);
-  printf("NUMERO: %ld\n", p.num);
-
-  if (p.prox == NULL) {
-    printf("PROX: NULL\n\n");
-  } else {
-    printf("PROX: %s\n\n", p.prox->nome);
-  }
 }
 
 void mostrar_particoes(TNomes lista) {
