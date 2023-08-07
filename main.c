@@ -107,7 +107,7 @@ void menu_funcionario() {
         }
       } else if (escolha == 6) {
         printf("Criando partições...");
-        classificacaoSubs_func((out);
+        classificacaoSubs_func((out));
         conjunto_particoes = le_nomes_particoes_diretorio("particoesFunc");
 
       } else if (escolha == 7) {
@@ -267,7 +267,11 @@ void menu_cliente() {
 }
 
 void menu_fornecedor() {
-  FILE *out;
+    FILE *out;
+    FILE *ordenado = fopen("forn_intercalado.dat", "r+");
+    TNomes *conjunto_particoes;
+    int flag = 0;
+
   if ((out = fopen(FORNECEDORES_FILE, "w+b")) == NULL) {
     printf("Erro ao abrir arquivo\n");
     exit(1);
@@ -275,7 +279,9 @@ void menu_fornecedor() {
     int escolha = -1;
     int cod;
 
-    while (escolha != 7) {
+    apaga_particoes_existentes("particoesForn");
+
+    while (escolha != 8) {
       msg_MENU("FORNECEDORES");
       scanf("%d", &escolha);
       if (escolha == 1) {
@@ -289,7 +295,28 @@ void menu_fornecedor() {
                "ordenada-----------------------");
         le_fornecedores(out);
       } else if (escolha == 3) {
-        le_fornecedores(out);
+        if (flag) {
+          if ((ordenado = fopen("forn_intercalado.dat", "r+")) == NULL) {
+
+            printf("Erro ao abrir arquivo\n");
+            exit(1);
+          }
+
+          le_fornecedores(ordenado);
+          printf("\nArquivo lido: Ordenado por particoes\n");
+
+        } else {
+          if (out == NULL) {
+            printf("Erro ao abrir arquivo\n");
+            exit(1);
+          }
+
+          le_fornecedores(out);
+          printf("\nArquivo lido: Ordenado em disco\n");
+        }
+
+
+
       } else if (escolha == 4) {
         printf("\nInforme o codigo a ser buscado: ");
 
@@ -321,12 +348,29 @@ void menu_fornecedor() {
         } else {
           imprime_fornecedor(&forn);
         }
-      }  else if (escolha == 6) {
-        printf("Criando particoes...");
-        classificacaoSubs_forn(out);
+      } else if (escolha == 6) {
+        printf("Criando partições...");
+        classificacaoSubs_forn((out));
+        conjunto_particoes = le_nomes_particoes_diretorio("particoesForn");
+
       } else if (escolha == 7) {
+        printf("Intercalando particoes...");
+
+        if (lista_vazia(*conjunto_particoes)) {
+          printf("Nao existe particoes para intercalar.\n");
+          break;
+
+        } else {
+          mostrar_particoes(*conjunto_particoes);
+          intercalacao_fornecedores("forn_intercalado.dat", conjunto_particoes);
+          // intercala_teste_1("clientes_intercalado.dat", conjunto_particoes);
+          flag = 1;
+        }
+
+      } else if (escolha == 8) {
         system("cls");
         break;
+
       } else {
         printf("\nESCOLHA UMA OPCAO VALIDA!\n");
         break;
@@ -337,7 +381,11 @@ void menu_fornecedor() {
 }
 
 void menu_encomenda() {
-  FILE *out;
+    FILE *out;
+    FILE *ordenado = fopen("enc_intercalado.dat", "r+");
+    TNomes *conjunto_particoes;
+    int flag = 0;
+
   if ((out = fopen(ENCOMENDAS_FILE, "w+b")) == NULL) {
     printf("Erro ao abrir arquivo\n");
     exit(1);
@@ -345,7 +393,9 @@ void menu_encomenda() {
     int escolha = -1;
     int cod;
 
-    while (escolha != 7) {
+      apaga_particoes_existentes("particoesEncom");
+
+    while (escolha != 8) {
       msg_MENU("ENCOMENDAS");
       scanf("%d", &escolha);
       if (escolha == 1) {
@@ -359,8 +409,30 @@ void menu_encomenda() {
                "ordenada-----------------------");
         le_encomendas(out);
       } else if (escolha == 3) {
-        le_encomendas(out);
-      } else if (escolha == 4) {
+        if (flag) {
+          if ((ordenado = fopen("enc_intercalado.dat", "r+")) == NULL) {
+
+            printf("Erro ao abrir arquivo\n");
+            exit(1);
+          }
+
+          le_encomendas(ordenado);
+          printf("\nArquivo lido: Ordenado por particoes\n");
+
+        } else {
+          if (out == NULL) {
+            printf("Erro ao abrir arquivo\n");
+            exit(1);
+          }
+
+          le_encomendas(out);
+          printf("\nArquivo lido: Ordenado em disco\n");
+        }
+
+
+
+      }
+       else if (escolha == 4) {
         printf("\nInforme o codigo a ser buscado: ");
         scanf("%d", &cod);
 
@@ -392,10 +464,27 @@ void menu_encomenda() {
 
       } else if (escolha == 6) {
         printf("Criando partições...");
-        classificacaoSubs_encom(out);
+        classificacaoSubs_encom((out));
+        conjunto_particoes = le_nomes_particoes_diretorio("particoesEncom");
+
       } else if (escolha == 7) {
+        printf("Intercalando particoes...");
+
+        if (lista_vazia(*conjunto_particoes)) {
+          printf("Nao existe particoes para intercalar.\n");
+          break;
+
+        } else {
+          mostrar_particoes(*conjunto_particoes);
+          intercalacao_encomendas("enc_intercalado.dat", conjunto_particoes);
+          // intercala_teste_1("clientes_intercalado.dat", conjunto_particoes);
+          flag = 1;
+        }
+
+      } else if (escolha == 8) {
         system("cls");
         break;
+
       } else {
         printf("\nESCOLHA UMA OPCAO VALIDA!\n");
         break;
@@ -406,7 +495,11 @@ void menu_encomenda() {
 }
 
 void menu_produto() {
-  FILE *out_cli;
+    FILE *out_cli;
+    FILE *ordenado = fopen("prod_intercalado.dat", "r+");
+    TNomes *conjunto_particoes;
+    int flag = 0;
+
   if ((out_cli = fopen(PRODUTOS_FILE, "w+b")) == NULL) {
     printf("Erro ao abrir arquivo\n");
     exit(1);
@@ -414,7 +507,9 @@ void menu_produto() {
     int escolha = -1;
     int cod;
 
-    while (escolha != 7) {
+      apaga_particoes_existentes("particoesProd");
+
+    while (escolha != 8) {
       msg_MENU("PRODUTO");
       scanf("%d", &escolha);
       if (escolha == 1) {
@@ -428,9 +523,31 @@ void menu_produto() {
                "ordenada-----------------------");
         le_produtos(out_cli);
       } else if (escolha == 3) {
-        le_produtos(out_cli);
+        if (flag) {
+          if ((ordenado = fopen("prod_intercalado.dat", "r+")) == NULL) {
 
-      } else if (escolha == 4) {
+            printf("Erro ao abrir arquivo\n");
+            exit(1);
+          }
+
+          le_produtos(ordenado);
+          printf("\nArquivo lido: Ordenado por particoes\n");
+
+        } else {
+          if (out_cli == NULL) {
+            printf("Erro ao abrir arquivo\n");
+            exit(1);
+          }
+
+          le_produtos(out_cli);
+          printf("\nArquivo lido: Ordenado em disco\n");
+        }
+
+
+
+      }
+
+       else if (escolha == 4) {
         printf("\nInforme o codigo a ser buscado: ");
 
         scanf("%d", &cod);
@@ -461,12 +578,29 @@ void menu_produto() {
         } else {
           imprime_produto(&prod);
         }
-      }  else if (escolha == 6) {
-        printf("Criando particoes...");
-        classificacaoSubs_prod(out_cli);
+      } else if (escolha == 6) {
+        printf("Criando partições...");
+        classificacaoSubs_prod((out_cli));
+        conjunto_particoes = le_nomes_particoes_diretorio("particoesProd");
+
       } else if (escolha == 7) {
+        printf("Intercalando particoes...");
+
+        if (lista_vazia(*conjunto_particoes)) {
+          printf("Nao existe particoes para intercalar.\n");
+          break;
+
+        } else {
+          mostrar_particoes(*conjunto_particoes);
+          intercalacao_produtos("prod_intercalado.dat", conjunto_particoes);
+          // intercala_teste_1("clientes_intercalado.dat", conjunto_particoes);
+          flag = 1;
+        }
+
+      } else if (escolha == 8) {
         system("cls");
         break;
+
       } else {
         printf("\nESCOLHA UMA OPCAO VALIDA!\n");
         break;
@@ -477,7 +611,11 @@ void menu_produto() {
 }
 
 void menu_prateleira() {
-  FILE *out_cli;
+    FILE *out_cli;
+    FILE *ordenado = fopen("prat_intercalado.dat", "r+");
+    TNomes *conjunto_particoes;
+    int flag = 0;
+
   if ((out_cli = fopen(PRATELEIRA_FILE, "w+b")) == NULL) {
     printf("Erro ao abrir arquivo\n");
     exit(1);
@@ -485,7 +623,9 @@ void menu_prateleira() {
     int escolha = -1;
     int cod;
 
-    while (escolha != 7) {
+      apaga_particoes_existentes("particoesPrat");
+
+    while (escolha != 8) {
       msg_MENU("PRATELEIRAS");
       scanf("%d", &escolha);
       if (escolha == 1) {
@@ -500,9 +640,31 @@ void menu_prateleira() {
                "ordenada-----------------------");
         le_prateleiras(out_cli);
       } else if (escolha == 3) {
-        le_prateleiras(out_cli);
+        if (flag) {
+          if ((ordenado = fopen("prat_intercalado.dat", "r+")) == NULL) {
 
-      } else if (escolha == 4) {
+            printf("Erro ao abrir arquivo\n");
+            exit(1);
+          }
+
+          le_prateleiras(ordenado);
+          printf("\nArquivo lido: Ordenado por particoes\n");
+
+        } else {
+          if (out_cli == NULL) {
+            printf("Erro ao abrir arquivo\n");
+            exit(1);
+          }
+
+          le_prateleiras(out_cli);
+          printf("\nArquivo lido: Ordenado em disco\n");
+        }
+
+
+
+      }
+
+       else if (escolha == 4) {
         printf("\nInforme o codigo a ser buscado: ");
 
         scanf("%d", &cod);
@@ -534,11 +696,28 @@ void menu_prateleira() {
           imprime_prateleira(&prat);
         }
       } else if (escolha == 6) {
-        printf("Criando particoes...");
-        classificacaoSubs_prat(out_cli);
+        printf("Criando partições...");
+        classificacaoSubs_prat((out_cli));
+        conjunto_particoes = le_nomes_particoes_diretorio("particoesPrat");
+
       } else if (escolha == 7) {
+        printf("Intercalando particoes...");
+
+        if (lista_vazia(*conjunto_particoes)) {
+          printf("Nao existe particoes para intercalar.\n");
+          break;
+
+        } else {
+          mostrar_particoes(*conjunto_particoes);
+          intercalacao_prateleiras("prat_intercalado.dat", conjunto_particoes);
+          // intercala_teste_1("clientes_intercalado.dat", conjunto_particoes);
+          flag = 1;
+        }
+
+      } else if (escolha == 8) {
         system("cls");
         break;
+
       } else {
         printf("\nESCOLHA UMA OPCAO VALIDA!\n");
         break;
@@ -549,13 +728,19 @@ void menu_prateleira() {
 }
 
 void menu_estoque() {
-  FILE *out_cli;
+    FILE *out_cli;
+    FILE *ordenado = fopen("estq_intercalado.dat", "r+");
+    TNomes *conjunto_particoes;
+    int flag = 0;
+
   if ((out_cli = fopen(ESTOQUE_FILE, "w+b")) == NULL) {
     printf("Erro ao abrir arquivo\n");
     exit(1);
   } else {
     int escolha = -1;
     int cod;
+
+      apaga_particoes_existentes("particoesEstoq");
 
     while (escolha != 8) {
       msg_MENU("ESTOQUE");
@@ -571,9 +756,31 @@ void menu_estoque() {
                "ordenada-----------------------");
         le_estoques(out_cli);
       } else if (escolha == 3) {
-        le_estoques(out_cli);
+        if (flag) {
+          if ((ordenado = fopen("estq_intercalado.dat", "r+")) == NULL) {
 
-      } else if (escolha == 4) {
+            printf("Erro ao abrir arquivo\n");
+            exit(1);
+          }
+
+          le_estoques(ordenado);
+          printf("\nArquivo lido: Ordenado por particoes\n");
+
+        } else {
+          if (out_cli == NULL) {
+            printf("Erro ao abrir arquivo\n");
+            exit(1);
+          }
+
+          le_estoques(out_cli);
+          printf("\nArquivo lido: Ordenado em disco\n");
+        }
+
+
+
+      }
+
+       else if (escolha == 4) {
         printf("\nInforme o codigo a ser buscado: ");
 
         scanf("%d", &cod);
@@ -605,12 +812,29 @@ void menu_estoque() {
           imprime_estoque(&est);
         }
       } else if (escolha == 6) {
-        printf("Criando particoes...");
-        classificacaoSubs_estoq(out_cli);
+        printf("Criando partições...");
+        classificacaoSubs_estoq((out_cli));
+        conjunto_particoes = le_nomes_particoes_diretorio("particoesEstoq");
+
       } else if (escolha == 7) {
+        printf("Intercalando particoes...");
+
+        if (lista_vazia(*conjunto_particoes)) {
+          printf("Nao existe particoes para intercalar.\n");
+          break;
+
+        } else {
+          mostrar_particoes(*conjunto_particoes);
+          intercalacao_estoque("estq_intercalado.dat", conjunto_particoes);
+          // intercala_teste_1("clientes_intercalado.dat", conjunto_particoes);
+          flag = 1;
+        }
+
+      } else if (escolha == 8) {
         system("cls");
         break;
-      }  else {
+
+      } else {
         printf("\nESCOLHA UMA OPCAO VALIDA!\n");
         break;
       }
