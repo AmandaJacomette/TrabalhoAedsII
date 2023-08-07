@@ -209,7 +209,7 @@ int verifica_particoes_existentes(char* nomePasta){
 }
 
 void apaga_particoes_existentes(char* nomePasta){
-  if (verifica_particoes_existentes() == 1){
+  if (verifica_particoes_existentes(nomePasta) == 1){
     TNomes* particoes_existentes = (TNomes *)malloc(sizeof(TNomes));
     particoes_existentes = le_nomes_particoes_diretorio(nomePasta);
     remover_particoes(particoes_existentes);
